@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-// プロキシ経由のため、ベースURLは不要
-// Create axios instance
+// Create axios instance with proper base URL
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 // Add request interceptor for auth
@@ -48,17 +48,17 @@ api.interceptors.response.use(
 // Auth API
 export const AuthAPI = {
   login: async (email: string, password: string) => {
-    const response = await api.post('/auth/login', { email, password });
+    const response = await api.post('/api/auth/login', { email, password });
     return response.data;
   },
   
   register: async (email: string, password: string, name?: string) => {
-    const response = await api.post('/auth/register', { email, password, name });
+    const response = await api.post('/api/auth/register', { email, password, name });
     return response.data;
   },
   
   refreshToken: async (refreshToken: string) => {
-    const response = await api.post('/auth/refresh', { refreshToken });
+    const response = await api.post('/api/auth/refresh', { refreshToken });
     return response.data;
   },
 };

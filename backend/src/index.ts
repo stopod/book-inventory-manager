@@ -10,9 +10,15 @@ config();
 
 const app = new Hono();
 
-// Middleware - 単純なロガーとシンプルなCORS設定
+// Middleware - 単純なロガーと詳細なCORS設定
 app.use('*', logger());
-app.use('*', cors());
+app.use('*', cors({
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
+}));
 
 // API Routes
 app.route('/api', apiRouter);

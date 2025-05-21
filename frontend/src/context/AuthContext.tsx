@@ -49,6 +49,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
     return config;
   });
+  
+  // 共通のトークン設定を他のaxiosインスタンスにも適用
+  axios.interceptors.request.use((config) => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
 
   // Add interceptor for response to handle token refresh
   api.interceptors.response.use(
@@ -61,6 +70,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           const refreshToken = localStorage.getItem('refreshToken');
           const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/refresh`, {
             refreshToken,
+          }, {
+            withCredentials: true,
           });
           localStorage.setItem('accessToken', data.accessToken);
           api.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`;
@@ -123,9 +134,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return;
       }
 
-      // トークンがあれば認証済みとみなす
-      setIsAuthenticated(true);
-      setIsLoading(false);
+      try {
+        // トークンの有効性を確認するためにユーザー情報を取得
+        const { data } = await api.get('/api/auth/me');
+        setUser(data);
+        setIsAuthenticated(true);
+      } catch (error) {
+        // トークンが無効な場合はログアウト
+        console.error('Authentication check failed:', error);
+        logout();
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     checkAuth();

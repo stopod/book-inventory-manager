@@ -196,4 +196,38 @@ export class AuthController {
       );
     }
   };
+  
+  // ログイン中のユーザー情報を取得するメソッド
+  getMe = async (c: Context) => {
+    try {
+      // authMiddlewareによって設定されたユーザー情報を取得
+      const user = c.get('user');
+      
+      if (!user) {
+        return c.json(
+          {
+            status: 401,
+            message: "Unauthorized",
+          },
+          401
+        );
+      }
+      
+      // パスワードを除外したユーザー情報を返す
+      const { password, ...userWithoutPassword } = user.props as any;
+      
+      return c.json({
+        id: user.id,
+        ...userWithoutPassword
+      });
+    } catch (error) {
+      return c.json(
+        {
+          status: 500,
+          message: "Internal Server Error",
+        },
+        500
+      );
+    }
+  };
 }

@@ -110,6 +110,9 @@ const BookFormPage = () => {
       
       console.log('Sending data to API:', rawData);
       
+      // 認証トークンを取得
+      const token = localStorage.getItem('accessToken');
+      
       // APIリクエストの直接実行
       if (isEditMode && id) {
         await axios.put(
@@ -117,7 +120,8 @@ const BookFormPage = () => {
           rawData,
           {
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
             },
           }
         );
@@ -127,7 +131,8 @@ const BookFormPage = () => {
           rawData,
           {
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
             },
           }
         );
