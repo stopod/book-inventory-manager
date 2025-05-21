@@ -199,10 +199,12 @@ export class BookController {
     const deleteBookUseCase = new DeleteBookUseCase(this.bookRepository);
     
     try {
+      console.log(`Deleting book with ID: ${id}`);
       await deleteBookUseCase.execute(id);
-      return c.json(null, 204);
+      // 生のResponseオブジェクトを使用
+      return new Response(null, { status: 204 });
     } catch (error) {
-      console.error(error);
+      console.error('Error deleting book:', error);
       return c.json(
         {
           status: 500,

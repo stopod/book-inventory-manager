@@ -21,7 +21,7 @@ const BookListPage = () => {
     try {
       setIsLoading(true);
       const token = localStorage.getItem('accessToken');
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/books`, {
+      const { data } = await axios.get(`/api/books`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -46,18 +46,16 @@ const BookListPage = () => {
     }
 
     try {
-      const token = localStorage.getItem('accessToken');
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/books/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(`/api/books/${id}`);
       
-      // Refresh books list
+      // 削除が成功したと仮定して、更新
       setBooks(books.filter(book => book.id !== id));
     } catch (err) {
       setError('Failed to delete book. Please try again.');
       console.error(err);
+      
+      // 削除に失敗した場合でもページを更新
+      fetchBooks();
     }
   };
 

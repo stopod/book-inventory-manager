@@ -112,7 +112,7 @@ const BookFormPage = () => {
       
       // APIリクエストの直接実行
       if (isEditMode && id) {
-        await axios.post(
+        await axios.put(
           `/api/books/${id}`,
           rawData,
           {
