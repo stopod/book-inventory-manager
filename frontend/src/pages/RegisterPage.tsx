@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
+import api from '../services/api'; // apiインスタンスをインポート
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').optional(),
@@ -36,10 +36,8 @@ const RegisterPage = () => {
       setIsLoading(true);
       setError(null);
 
-      console.log('Sending request to:', '/api/auth/register');
-      
       // プロキシを経由して直接相対パスでリクエストする
-      const response = await axios.post(
+      const response = await api.post(
         '/api/auth/register',
         {
           email: data.email,

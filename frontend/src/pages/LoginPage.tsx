@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
+import api from '../services/api'; // apiインスタンスをインポート
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email format'),
@@ -33,8 +33,8 @@ const LoginPage = () => {
       
       console.log('Trying to login with:', data.email);
       
-      // 直接axiosを使う
-      const response = await axios.post(
+      // 直接apiインスタンスを使う
+      const response = await api.post(
         '/api/auth/login',
         {
           email: data.email,
