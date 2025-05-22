@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import api from '../services/api'; // apiインスタンスをインポート
+import { useAuth } from '../hooks/useAuth'; // useAuthを追加
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email format'),
@@ -13,8 +14,8 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
-  const navigate = useNavigate(); // navigateを使用
-  // const { login } = useAuth(); // 未使用のためコメントアウト
+  const navigate = useNavigate();
+  const { login } = useAuth(); // AuthContextのlogin関数を使用
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,23 +34,10 @@ const LoginPage = () => {
       
       console.log('Trying to login with:', data.email);
       
-      // 直接apiインスタンスを使う
-      const response = await api.post(
-        '/api/auth/login',
-        {
-          email: data.email,
-          password: data.password,
-        }
-      );
+      // AuthContextのlogin関数を使用
+      await login(data.email, data.password);
       
-      console.log('Login response:', response.data);
-      
-      // ログイン成功
-      const { accessToken, refreshToken } = response.data;
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      
-      // React Routerでナビゲーション
+      // ログイン成功後は自動で認証状態が更新される
       navigate('/books');
     } catch (err: any) {
       console.error('Login error:', err);

@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import api from '../services/api'; // apiインスタンスをインポート
+import { useAuth } from '../hooks/useAuth'; // useAuthを追加
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').optional(),
@@ -18,8 +19,8 @@ const registerSchema = z.object({
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 const RegisterPage = () => {
-  const navigate = useNavigate(); // navigateを使用
-  // const { register: registerUser } = useAuth(); // 未使用のためコメントアウト
+  const navigate = useNavigate();
+  const { register: registerUser } = useAuth(); // AuthContextのregister関数を使用
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,25 +37,10 @@ const RegisterPage = () => {
       setIsLoading(true);
       setError(null);
 
-      // プロキシを経由して直接相対パスでリクエストする
-      const response = await api.post(
-        '/api/auth/register',
-        {
-          email: data.email,
-          password: data.password,
-          name: data.name,
-        }
-      );
+      // AuthContextのregister関数を使用
+      await registerUser(data.email, data.password, data.name);
       
-      // 登録成功
-      console.log('Registration successful:', response.data);
-      
-      // トークンを保存
-      const { accessToken, refreshToken } = response.data;
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      
-      // React Routerでナビゲーション
+      // 登録成功後は自動で認証状態が更新される
       navigate('/books');
     } catch (err: any) {
       console.error('Registration error:', err);
