@@ -15,4 +15,5 @@ RUN npx prisma generate
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+# 起動時にマイグレーションを実行してからサーバーを起動
+CMD ["sh", "-c", "npx prisma db push && npm run dev"]
