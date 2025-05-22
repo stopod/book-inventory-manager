@@ -19,7 +19,7 @@ const bookSchema = z.object({
 });
 
 type BookFormData = z.input<typeof bookSchema>;
-type BookData = z.output<typeof bookSchema>;
+// type BookData = z.output<typeof bookSchema>; // コメントアウト
 
 const BookFormPage = () => {
   const { id } = useParams<{ id: string }>();

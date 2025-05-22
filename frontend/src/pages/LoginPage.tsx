@@ -14,8 +14,8 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-  const { login } = useAuth();
+  // const navigate = useNavigate(); // 未使用のためコメントアウト
+  // const { login } = useAuth(); // 未使用のためコメントアウト
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
