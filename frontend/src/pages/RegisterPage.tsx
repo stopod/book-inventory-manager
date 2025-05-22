@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // useNavigateを追加
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import api from '../services/api'; // apiインスタンスをインポート
-import { useAuth } from '../hooks/useAuth'; // useAuthを追加
+import { useAuth } from '../hooks/useAuth';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').optional(),

@@ -134,10 +134,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return;
       }
 
+      // 一時的に/api/auth/meを無効化して、トークンがあるだけで認証済みとする
       try {
-        // トークンの有効性を確認するためにユーザー情報を取得
-        const { data } = await api.get('/api/auth/me');
-        setUser(data);
+        // TODO: 後で/api/auth/meエンドポイントを実装したら有効化
+        // const { data } = await api.get('/api/auth/me');
+        // setUser(data);
         setIsAuthenticated(true);
       } catch (error) {
         // トークンが無効な場合はログアウト

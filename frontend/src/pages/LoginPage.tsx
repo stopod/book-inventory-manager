@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // useNavigateを追加
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import api from '../services/api'; // apiインスタンスをインポート
-import { useAuth } from '../hooks/useAuth'; // useAuthを追加
+import { useAuth } from '../hooks/useAuth';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email format'),
@@ -36,6 +35,8 @@ const LoginPage = () => {
       
       // AuthContextのlogin関数を使用
       await login(data.email, data.password);
+      
+      console.log('AuthContext login successful, navigating...');
       
       // ログイン成功後は自動で認証状態が更新される
       navigate('/books');
