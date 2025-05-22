@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // useNavigateを追加
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,7 +13,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
-  // const navigate = useNavigate(); // 未使用のためコメントアウト
+  const navigate = useNavigate(); // navigateを使用
   // const { login } = useAuth(); // 未使用のためコメントアウト
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,8 +49,8 @@ const LoginPage = () => {
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
       
-      // 認証状態を更新するためにreloadする
-      window.location.href = '/books';
+      // React Routerでナビゲーション
+      navigate('/books');
     } catch (err: any) {
       console.error('Login error:', err);
       if (err.response) {
