@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api'; // apiインスタンスをインポート
 
 interface Book {
   id: string;
@@ -20,12 +20,7 @@ const BookListPage = () => {
   const fetchBooks = async () => {
     try {
       setIsLoading(true);
-      const token = localStorage.getItem('accessToken');
-      const { data } = await axios.get(`/api/books`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await api.get(`/api/books`);
       setBooks(data);
       setError(null);
     } catch (err) {
@@ -46,7 +41,7 @@ const BookListPage = () => {
     }
 
     try {
-      await axios.delete(`/api/books/${id}`);
+      await api.delete(`/api/books/${id}`);
       
       // 削除が成功したと仮定して、更新
       setBooks(books.filter(book => book.id !== id));

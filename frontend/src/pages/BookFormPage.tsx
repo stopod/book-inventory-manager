@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
+import api from '../services/api'; // apiインスタンスをインポート
 
 const bookSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -55,12 +55,7 @@ const BookFormPage = () => {
         setIsEditMode(true);
         try {
           setIsLoading(true);
-          const token = localStorage.getItem('accessToken');
-          const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/books/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const { data } = await api.get(`/api/books/${id}`);
           
           // Transform data to match form field types
           reset({
@@ -110,32 +105,11 @@ const BookFormPage = () => {
       
       console.log('Sending data to API:', rawData);
       
-      // 認証トークンを取得
-      const token = localStorage.getItem('accessToken');
-      
-      // APIリクエストの直接実行
+      // APIリクエストの実行
       if (isEditMode && id) {
-        await axios.put(
-          `/api/books/${id}`,
-          rawData,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-          }
-        );
+        await api.put(`/api/books/${id}`, rawData);
       } else {
-        await axios.post(
-          `/api/books`,
-          rawData,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-          }
-        );
+        await api.post(`/api/books`, rawData);
       }
       
       navigate('/books');

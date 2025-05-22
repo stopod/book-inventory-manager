@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api'; // apiインスタンスをインポート
 
 interface Book {
   id: string;
@@ -29,12 +29,7 @@ const BookDetailsPage = () => {
     const fetchBook = async () => {
       try {
         setIsLoading(true);
-        const token = localStorage.getItem('accessToken');
-        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/books/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const { data } = await api.get(`/api/books/${id}`);
         setBook(data);
         setError(null);
       } catch (err) {
@@ -56,12 +51,7 @@ const BookDetailsPage = () => {
     }
 
     try {
-      const token = localStorage.getItem('accessToken');
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/books/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await api.delete(`/api/books/${id}`);
       
       navigate('/books');
     } catch (err) {
